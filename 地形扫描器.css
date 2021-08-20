@@ -1,0 +1,48 @@
+.mainInterface {
+    background-color: rgb(50, 50, 50);
+    background-position: center;
+    padding: 50px;
+    height: 560px;
+}
+
+.help {
+    background-color: rgb(75, 75, 75);
+    float: left;
+    font-size: 20px;
+    width: 256px;
+    padding: 16px;
+    margin: 20px;
+}
+
+.options {
+    background-color: rgb(75, 75, 75);
+    width: 412px;
+    padding: 16px;
+    height: 488px;
+    float: left;
+}
+
+.scanResult {
+    background-color: rgb(75, 75, 75);
+    height: 512px;
+    width: 512px;
+    float: left;
+}
+
+.drawingArea {
+    min-height: 128px;
+    min-width: 128px;
+    max-height: 512px;
+    max-width: 512px;
+}
+
+.button {
+    float: none;
+    width: 388px;
+    background-color: darkgray;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 50px;
+    font-size: 20px;
+    margin: 8px;
+}
