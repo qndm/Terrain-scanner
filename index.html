@@ -11,7 +11,7 @@
 </head>
 
 <body style="background-color: #FBE9E7;">
-    <div class="mdui-color-deep-orange-400 mdui-toolbar mdui-color-theme">
+    <div class="mdui-color-deep-orange-500 mdui-toolbar mdui-color-theme">
         <span class="mdui-typo-title">地形扫描器</span>
             <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-orange-800" id="copy" onclick="copy('(async function () {var scanResult = []; for (let x = 0; x <= voxels.shape.x; x++) {scanResult.push([]);for (let z = 0; z <= voxels.shape.z; z++) {for (let y = voxels.shape.y; y >= 0; y--) {if(y <= 0) scanResult[scanResult.length - 1].push(voxels.name(0)); else if (voxels.getVoxelId(x, y, z) != 0) {scanResult[scanResult.length - 1].push(voxels.name(voxels.getVoxelId(x, y, z)));break;}}}await sleep(16);}console.log(JSON.stringify(scanResult));}());');alert('复制成功！');">复制扫描代码</button>
             <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-orange-800">
@@ -24,7 +24,7 @@
             <button class="mdui-btn mdui-ripple mdui-btn-raised mdui-color-orange-800" onclick="alert('帮助：\n首先复制扫描代码，然后在地图的控制台输入扫描代码，把扫描结果保存在.txt文件中（.js或者.json也可以），点击[输入扫描结果]，上传结果文件，之后会把地形显示出来');"><i class="mdui-icon material-icons">&#xe887;</i>帮助</button>
         </div>
     <div class="mdui-color-deep-orange-100" id="mainInterface">
-        <div class="mdui-color-deep-orange-300" id="scanResult">
+        <div class="mdui-color-deep-orange-400" id="scanResult">
             <canvas id="drawingArea" class="drawingArea" width="512" height="512"></canvas>
         </div>
         <div class="mdui-color-deep-orange-300">
