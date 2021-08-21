@@ -25,6 +25,7 @@
             onclick="draw(data);">绘制扫描图</button>
         <button class="mdui-btn mdui-ripple mdui-btn-raised mdui-color-deep-orange-500" id="enlarge"
             onclick="let input = Number(prompt('请输入放大倍数'));enlarge = input ? input : 1;document.getElementById('enlarge').innerHTML = `设置放大倍数（当前放大倍数${enlarge}x）`;draw(data);">设置放大倍数（当前倍数1x）</button>
+        <div class="mdui-toolbar-spacer"></div>
         <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-btn-dense mdui-color-deep-orange-500"
             onclick="alert('帮助：\n首先复制扫描代码，然后在地图的控制台输入扫描代码，把扫描结果保存在.txt文件中（.js或者.json也可以），点击[输入扫描结果]，上传结果文件，之后会把地形显示出来');"><i
                 class="mdui-icon material-icons">&#xe887;</i></button>
