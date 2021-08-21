@@ -21,12 +21,16 @@
         </div>
         <div class="options">
             <button class="mdui-btn-raised mdui-ripple" id="copy" onclick="copy('(async function () {var scanResult = []; for (let x = 0; x <= voxels.shape.x; x++) {scanResult.push([]);for (let z = 0; z <= voxels.shape.z; z++) {for (let y = voxels.shape.y; y >= 0; y--) {if(y <= 0) scanResult[scanResult.length - 1].push(voxels.name(0)); else if (voxels.getVoxelId(x, y, z) != 0) {scanResult[scanResult.length - 1].push(voxels.name(voxels.getVoxelId(x, y, z)));break;}}}await sleep(16);}console.log(JSON.stringify(scanResult));}());');alert('复制成功！');">复制扫描代码</button>
+            <br>
             <button class="mdui-btn-raised mdui-ripple">
                 <input type="file" id="file-input" name="fileContent" accept=".txt" style="height: 100%; width: 0;">
                 <label for="file-input" id="inputLabel" style="width: 70%;">上传扫描结果</label>
             </button>
+            <br>
             <button class="mdui-btn-raised mdui-ripple" id="upload" onclick="loadFile()">上传</button>
+            <br>
             <button class="mdui-ripple mdui-btn-raised" id="copy" onclick="draw(data);">绘制扫描图</button>
+            <br>
             <button class="mdui-ripple mdui-btn-raised" id="enlarge" onclick="let input = Number(prompt('请输入放大倍数'));enlarge = input ? input : 1;document.getElementById('enlarge').innerHTML = `设置放大倍数（当前放大倍数${enlarge}x）`;draw(data);">设置放大倍数（当前倍数1x）</button>
         </div>
         <script src="./地形扫描器.js"></script>
