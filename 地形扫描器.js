@@ -127,6 +127,7 @@ async function draw(data) {
                         if (typeof data[x][y] == 'object' && x >= 0 && y >= 0 && typeof data[x - 1][y] == 'object') pen.fillStyle = shadow(colour(data[x][y].voxel), data[x - 1][y].hint - data[x][y].hint);
                         else pen.fillStyle = colour(data[x][y]);
                     } catch (error) {
+                        console.log('常规画图');
                         if(typeof data[x][y] == 'object') pen.fillStyle = colour(data[x][y].voxel);
                         else pen.fillStyle = colour(data[x][y]);
                     }
