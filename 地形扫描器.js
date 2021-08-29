@@ -84,7 +84,12 @@ function shadow(colour, drop = 0) {
  * @param {string} voxel - 方块名称
  * @returns {string} 16进制颜色
  */
-function colour(voxel) {
+function colour(voxel1) {
+    if(typeof voxel1 == 'string') {
+        voxel = voxel1;
+    } else {
+        voxel = voxel1.voxel;
+    }
     if (voxel.includes('plank_') || voxel.includes('board_') || voxel == 'wooden_box') return '#B0823F';
     if (voxel.includes('board')) return '#B67746';
     if (voxel.includes('window')) return '#422221';
