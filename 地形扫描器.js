@@ -123,7 +123,7 @@ async function draw(data) {
         for (let x in data) {
             for (let y in data[x]) { // y相当于地图中的z
                 if (data[x][y] != 'air' || colour(data[x][y]) != '#4B4B4B') {
-                    if (typeof data[x][y] == 'object') pen.fillStyle = shadow(colour(data[x][y].voxel),data[x-1][z].hint - data[x][y].hint);
+                    if (typeof data[x][y] == 'object') pen.fillStyle = shadow(colour(data[x][y].voxel),data[x][z-1].hint - data[x][y].hint);
                     else pen.fillStyle = colour(data[x], [y]);
                     pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
                 } else {
