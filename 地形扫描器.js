@@ -85,7 +85,7 @@ function shadow(colour, drop = 0) {
  * @returns {string} 16进制颜色
  */
 function colour(voxel1) {
-    if(typeof voxel1 == 'string') {
+    if (typeof voxel1 == 'string') {
         voxel = voxel1;
     } else {
         voxel = voxel1.voxel;
@@ -123,8 +123,13 @@ async function draw(data) {
         for (let x in data) {
             for (let y in data[x]) { // y相当于地图中的z
                 if (data[x][y] != 'air' || colour(data[x][y]) != '#4B4B4B') {
-                    if (typeof data[x][y] == 'object' && x >= 0 && y >= 0 && typeof data[x-1][y] == 'object') pen.fillStyle = shadow(colour(data[x][y].voxel),data[x-1][y].hint - data[x][y].hint);
-                    else pen.fillStyle = colour(data[x], [y]);
+                    try {
+                        if (typeof data[x][y] == 'object' && x >= 0 && y >= 0 && typeof data[x - 1][y] == 'object') pen.fillStyle = shadow(colour(data[x][y].voxel), data[x - 1][y].hint - data[x][y].hint);
+                        else pen.fillStyle = colour(data[x][y]);
+                    } catch (error) {
+                        if(typeof data[x][y] == 'object') pen.fillStyle = colour(data[x][y].voxel);
+                        else pen.fillStyle = colour(data[x][y]);
+                    }
                     pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
                 } else {
                     pen.clearRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
