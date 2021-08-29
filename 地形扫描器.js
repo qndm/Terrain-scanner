@@ -43,6 +43,7 @@ const colours = {
     '#1C260A': ['exclamation_mark', 'question_mark'],
     '#2E1F15': ['add', 'subtract', 'multiply', 'divide', 'equal', 'ampersand', 'asterisk', 'at', 'backslash', 'bracket_close', 'bracket_open', 'caret', 'colon', 'comma', 'dollar', 'greater_than', 'less_than', 'paren_open', 'paren_close', 'percent', 'period', 'pound', 'quotation_mark', 'semicolon', 'slash', 'tilde'],
     '#969696': ['stainless_steel'],
+    '#C2EDF8': ['powder_blue']
 };
 const direct = ['cadet_blue', 'sky_blue', 'powdr_blue', 'dark_gray', 'light_gray', 'olive_green', 'yellow_green', 'pale_green', 'red', 'dark_red', 'brick_red', 'medium_gray', 'dark_slate_blue', 'pink', 'sakura_pink', 'black', 'white', 'blue', 'turquoise', 'dark_orchid', 'medium_orchid', 'medium_purple', 'medium_violet_red', 'maroon', 'coffee_gray', 'peru', 'dark_salmon', 'navajo_white', 'orange_red', 'medium_yellow', 'medium_green', 'sienna', 'mint_green', 'medium_spring_green'];
 
