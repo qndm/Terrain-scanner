@@ -4,21 +4,29 @@ const fileInput = document.getElementById('file-input');
 var data = [];
 var enlarge = 1;
 var drawing = false;
-setInterval(() => {
-    if (!document.getElementById('hint')) {
-        var hint = document.createElement('p');
-        hint.innerHTML = '温馨提示：地形扫描器是开源的，但转载时不要忘记表明原作者哦~<br>原作者：全能岛民';
-        hint.style.color = "red";
-        hint.style.float = "left";
-        hint.id = 'hint';
-        document.getElementById('mainInterface').appendChild(hint);
-    } else {
-        var hint = document.getElementById('hint');
-        if (hint.innerHTML != '温馨提示：地形扫描器是开源的，但转载时不要忘记表明原作者哦~<br>原作者：全能岛民') hint.innerHTML = '温馨提示：地形扫描器是开源的，但转载时不要忘记表明原作者哦~<br>原作者：全能岛民';
-        if (hint.style.color != "red") hint.style.color = "red";
-        if (hint.style.float != "left") hint.style.float = "left";
+
+function dealWith(value, length = 2) {
+    return value.length >= length ? value : '0' + String(value);
+}
+class RGBColour {
+    /**
+     * 定义一个RGB值
+     * @param hex {string | number[]} - 16进制颜色或者一个数组`[r,g,b]`
+     */
+    constructor(hex = "#000000") {
+        if (typeof hex == "string") {
+            this.r = parseInt(hex.slice(1, 3), 16);
+            this.g = parseInt(hex.slice(3, 5), 16);
+            this.b = parseInt(hex.slice(5, 7), 16);
+            this.hex = hex;
+        } else {
+            this.r = hex[0];
+            this.g = hex[1];
+            this.b = hex[2];
+            this.hex = '#' + dealWith(this.r.toString(16)) + dealWith(this.g.toString(16)) + dealWith(this.b.toString(16));
+        }
     }
-}, 100);
+}
 
 function copy(value) {
     var w = document.createElement('input');
@@ -62,6 +70,15 @@ function conversion(text, a, b = '') {
     }
     return newText;
 }
+
+function shadow(colour, drop = 0) {
+    var { r, g, b } = new RGBColour(colour);
+    r = Math.max(0, r - drop);
+    g = Math.max(0, g - drop);
+    b = Math.max(0, b - drop);
+    return new RGBColour([r, g, b]).hex;
+}
+
 /**
  * 
  * @param {string} voxel - 方块名称
@@ -80,10 +97,18 @@ function colour(voxel) {
     if (voxel.includes('lab')) return '#707070';
     if (direct.includes(conversion(conversion(conversion(voxel, 'decorative_light'), 'light', ''), 'gift', ''))) return conversion(voxel, '_', '');
     for (let i in colours)
-        if (colours[i].includes(voxel))
-            return i;
+        if (typeof voxel == "string") {
+            if (colours[i].includes(voxel)) {
+                return i;
+            }
+        } else {
+            if (colours[i].includes(voxel.voxel)) {
+                return i;
+            }
+        }
     return '#4B4B4B';
 }
+
 
 async function draw(data) {
     if (!drawing) {
@@ -91,12 +116,13 @@ async function draw(data) {
         drawing = true;
         pen.clearRect(0, 0, 512, 512);
         for (let x in data) {
-            for (let z in data[x]) {
-                if (data[x][z] != 'air' || colour(data[x][z]) != '#4B4B4B') {
-                    pen.fillStyle = colour(data[x][z]);
-                    pen.fillRect(x * enlarge * 2, z * enlarge * 2, x * enlarge * 2, z * enlarge * 2);
+            for (let y in data[x]) { // y相当于地图中的z
+                if (data[x][y] != 'air' || colour(data[x][y]) != '#4B4B4B') {
+                    if (typeof data[x][y] == 'object') pen.fillStyle = shadow(colour(data[x][y].voxel),data[x-1][z].hint - data[x][y].hint);
+                    else pen.fillStyle = colour(data[x], [y]);
+                    pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
                 } else {
-                    pen.clearRect(x * enlarge * 2, z * enlarge * 2, x * enlarge * 2, z * enlarge * 2);
+                    pen.clearRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
                 }
             }
         }
@@ -130,3 +156,18 @@ function loadFile() {
         alert("请先上传文件！")
     }
 }
+setInterval(() => {
+    if (!document.getElementById('hint')) {
+        var hint = document.createElement('p');
+        hint.innerHTML = '温馨提示：地形扫描器是开源的，但转载时不要忘记表明原作者哦~<br>原作者：全能岛民';
+        hint.style.color = "red";
+        hint.style.float = "left";
+        hint.id = 'hint';
+        document.getElementById('mainInterface').appendChild(hint);
+    } else {
+        var hint = document.getElementById('hint');
+        if (hint.innerHTML != '温馨提示：地形扫描器是开源的，但转载时不要忘记表明原作者哦~<br>原作者：全能岛民') hint.innerHTML = '温馨提示：地形扫描器是开源的，但转载时不要忘记表明原作者哦~<br>原作者：全能岛民';
+        if (hint.style.color != "red") hint.style.color = "red";
+        if (hint.style.float != "left") hint.style.float = "left";
+    }
+}, 100);
