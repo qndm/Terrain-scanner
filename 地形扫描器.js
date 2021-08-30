@@ -20,9 +20,9 @@ class RGBColour {
             this.b = parseInt(hex.slice(5, 7), 16);
             this.hex = hex;
         } else {
-            this.r = String(hex[0]);
-            this.g = String(hex[1]);
-            this.b = String(hex[2]);
+            this.r = hex[0];
+            this.g = hex[1];
+            this.b = hex[2];
             this.hex = '#' + dealWith(this.r.toString(16)) + dealWith(this.g.toString(16)) + dealWith(this.b.toString(16));
         }
     }
@@ -74,9 +74,9 @@ function conversion(text, a, b = '') {
 
 function shadow(colour, drop = 0) {
     var { r, g, b } = new RGBColour(colour);
-    r = Math.max(0, r - drop);
-    g = Math.max(0, g - drop);
-    b = Math.max(0, b - drop);
+    r = Math.max(0, r / drop * 100);
+    g = Math.max(0, g / drop * 100);
+    b = Math.max(0, b / drop * 100);
     return new RGBColour([r, g, b]).hex;
 }
 
@@ -124,28 +124,28 @@ async function draw(data) {
                 if (((typeof(data[x][y]) != 'object') ? colour(data[x][y]) : colour(data[x][y].voxel)) != '#FF8A65') {
                     try {
                         if (x > 0 && y > 0 && false) {
-                            if (typeof data[x][y] == 'object' && typeof data[x - 1][y] == 'object') {
-                                pen.fillStyle = shadow(colour(data[x][y].voxel), data[x - 1][y].high - data[x][y].high);
+                            if (typeof data[x][y] != undefined && typeof data[x + 1][y].voxel != undefined) {
+                                pen.fillStyle = shadow(colour(data[x][y].voxel), data[x + 1][y].high - data[x][y].high);
                                 pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
-                                console.group('立体画图', x, y, pen.fillStyle, colour(data[x][y].high), data[x - 1][y].high - data[x][y].high);
-                                console.log(typeof data[x][y] == 'object', x >= 0, y >= 0, typeof data[x - 1][y] == 'object');
+                                console.group('立体画图', x, y, pen.fillStyle, colour(data[x][y].high), data[x + 1][y].high - data[x][y].high);
+                                console.log(typeof data[x][y] != undefined, x >= 0, y >= 0, typeof data[x + 1][y] != undefined);
                                 console.groupEnd();
                             } else {
                                 pen.fillStyle = colour(data[x][y]);
                                 pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
                                 console.group('常规画图', x, y, pen.fillStyle);
-                                console.log((typeof data[x][y]) == 'object', x >= 0, y >= 0, (typeof data[x - 1][y]) == 'object');
+                                console.log((typeof data[x][y]) != undefined, x >= 0, y >= 0, (typeof data[x - 1][y]) != undefined);
                                 console.groupEnd();
                             }
                         } else {
                             pen.fillStyle = colour(data[x][y]);
                             pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
                             console.group('常规画图', x, y, pen.fillStyle);
-                            console.log((typeof data[x][y]) == 'object', x >= 0, y >= 0);
+                            console.log((typeof data[x][y]) != undefined, x >= 0, y >= 0);
                             console.groupEnd();
                         }
                     } catch (error) {
-                        if (typeof data[x][y] == 'object') pen.fillStyle = colour(data[x][y].voxel);
+                        if (typeof data[x][y] != undefined) pen.fillStyle = colour(data[x][y].voxel);
                         else pen.fillStyle = colour(data[x][y]);
                         pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
                         console.log('常规画图', x, y, pen.fillStyle, error);
