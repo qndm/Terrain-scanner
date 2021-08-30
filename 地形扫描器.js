@@ -20,9 +20,9 @@ class RGBColour {
             this.b = parseInt(hex.slice(5, 7), 16);
             this.hex = hex;
         } else {
-            this.r = hex[0];
-            this.g = hex[1];
-            this.b = hex[2];
+            this.r = String(hex[0]);
+            this.g = String(hex[1]);
+            this.b = String(hex[2]);
             this.hex = '#' + dealWith(this.r.toString(16)) + dealWith(this.g.toString(16)) + dealWith(this.b.toString(16));
         }
     }
@@ -37,6 +37,7 @@ function copy(value) {
     w.remove();
 }
 const colours = {
+    '#FF8A65': ['air'],
     '#86C349': ['grass', 'dark_grass', 'windygrass', 'bamboo', 'greenbelt_L', 'greenbelt_L1'],
     '#854D31': ['dirt'],
     '#ABABAB': ['stone', 'dark_stone', 'rock'],
@@ -85,10 +86,15 @@ function shadow(colour, drop = 0) {
  * @returns {string} 16进制颜色
  */
 function colour(voxel1) {
-    if (typeof voxel1 == 'string') {
-        voxel = voxel1;
+    if ((typeof voxel1) != 'object' && voxel1.voxel == undefined) {
+        voxel = voxel1.toString();
     } else {
-        voxel = voxel1.voxel;
+        voxel = voxel1.voxel.toString();
+    }
+    for (let i in colours) {
+        if (colours[i].includes(voxel)) {
+            return i;
+        }
     }
     if (voxel.includes('plank_') || voxel.includes('board_') || voxel == 'wooden_box') return '#B0823F';
     if (voxel.includes('board')) return '#B67746';
@@ -101,17 +107,7 @@ function colour(voxel1) {
     if (voxel.includes('stone')) return '#ABABAB';
     if (voxel.includes('lab')) return '#707070';
     if (direct.includes(conversion(conversion(conversion(voxel, 'decorative_light'), 'light', ''), 'gift', ''))) return conversion(voxel, '_', '');
-    for (let i in colours)
-        if (typeof voxel == "string") {
-            if (colours[i].includes(voxel)) {
-                return i;
-            }
-        } else {
-            if (colours[i].includes(voxel.voxel)) {
-                return i;
-            }
-        }
-    return '#4B4B4B';
+    return '#FF8A65';
 }
 
 
@@ -120,25 +116,50 @@ async function draw(data) {
         console.log(data);
         drawing = true;
         pen.clearRect(0, 0, 512, 512);
+        console.group('画图日志');
+        console.log('画布大小：', drawingArea.width, drawingArea.height);
+        console.group('画图');
         for (let x in data) {
             for (let y in data[x]) { // y相当于地图中的z
-                if (data[x][y] != 'air' || colour(data[x][y]) != '#4B4B4B') {
+                if (((typeof(data[x][y]) != 'object') ? colour(data[x][y]) : colour(data[x][y].voxel)) != '#FF8A65') {
                     try {
-                        if (typeof data[x][y] == 'object' && x >= 0 && y >= 0 && typeof data[x - 1][y] == 'object') pen.fillStyle = shadow(colour(data[x][y].voxel), data[x - 1][y].hint - data[x][y].hint);
-                        else pen.fillStyle = colour(data[x][y]);
+                        if (x > 0 && y > 0 && false) {
+                            if (typeof data[x][y] == 'object' && typeof data[x - 1][y] == 'object') {
+                                pen.fillStyle = shadow(colour(data[x][y].voxel), data[x - 1][y].high - data[x][y].high);
+                                pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
+                                console.group('立体画图', x, y, pen.fillStyle, colour(data[x][y].high), data[x - 1][y].high - data[x][y].high);
+                                console.log(typeof data[x][y] == 'object', x >= 0, y >= 0, typeof data[x - 1][y] == 'object');
+                                console.groupEnd();
+                            } else {
+                                pen.fillStyle = colour(data[x][y]);
+                                pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
+                                console.group('常规画图', x, y, pen.fillStyle);
+                                console.log((typeof data[x][y]) == 'object', x >= 0, y >= 0, (typeof data[x - 1][y]) == 'object');
+                                console.groupEnd();
+                            }
+                        } else {
+                            pen.fillStyle = colour(data[x][y]);
+                            pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
+                            console.group('常规画图', x, y, pen.fillStyle);
+                            console.log((typeof data[x][y]) == 'object', x >= 0, y >= 0);
+                            console.groupEnd();
+                        }
                     } catch (error) {
-                        console.log('常规画图');
-                        if(typeof data[x][y] == 'object') pen.fillStyle = colour(data[x][y].voxel);
+                        if (typeof data[x][y] == 'object') pen.fillStyle = colour(data[x][y].voxel);
                         else pen.fillStyle = colour(data[x][y]);
+                        pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
+                        console.log('常规画图', x, y, pen.fillStyle, error);
+                        console.groupEnd();
                     }
-                    pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
                 } else {
+                    console.log('不画图', x, y);
                     pen.clearRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
                 }
             }
         }
-        console.log(drawingArea.width, drawingArea.height);
+        console.groupEnd();
         drawing = false;
+        console.groupEnd();
     }
 }
 
