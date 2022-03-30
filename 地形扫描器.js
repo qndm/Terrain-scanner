@@ -106,7 +106,7 @@ function colour(voxel1) {
     if (voxel.includes('palace')) return '#003371';
     if (voxel.includes('stone')) return '#ABABAB';
     if (voxel.includes('lab')) return '#707070';
-    if (direct.includes(conversion(conversion(conversion(voxel, 'decorative_light'), 'light', ''), 'gift', ''))) return conversion(voxel, '_', '');
+    if (direct.includes(voxel.slice(0,voxel.indexOf('_' + 1))) return voxel.slice(0,voxel.indexOf('_' + 1));//conversion(), '_', '');//voxel
     return '#FF8A65';
 }
 
