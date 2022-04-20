@@ -1,0 +1,126 @@
+.mainInterface {
+    background-color: rgb(50, 50, 50);
+    background-position: center;
+    padding: 50px;
+    height: 560px;
+}
+
+.help {
+    background-color: rgb(75, 75, 75);
+    float: left;
+    font-size: 20px;
+    width: 256px;
+    padding: 16px;
+    margin: 20px;
+}
+
+.options {
+    background-color: rgb(75, 75, 75);
+    width: 412px;
+    padding: 16px;
+    height: 488px;
+    float: left;
+}
+
+.scanResult {
+    background-color: rgb(75, 75, 75);
+    height: 512px;
+    width: 512px;
+    float: left;
+}
+
+.drawingArea {
+    min-height: 128px;
+    min-width: 128px;
+    max-height: 1024px;
+    max-width: 1024px;
+}
+
+button {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 5px;
+    border-style: none;
+    background-color: #ffccb5;
+    transition: background-color 0.2s, border-radius 0.2s;
+}
+
+button:active {
+    background-color: #ffe7dd;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0px;
+}
+
+input,
+textarea,
+select {
+    padding: 5px;
+    border-radius: 5px;
+    border-style: none;
+    background-color: #ffccb5;
+    transition: border-radius 0.5s;
+}
+
+input:hover,
+input:focus,
+select:hover,
+select:focus,
+textarea:focus,
+textarea:hover,
+button:hover {
+    border-radius: 0px;
+    outline: none;
+}
+
+input:disabled,
+select:disabled,
+button:disabled {
+    border-radius: 5px;
+    color: #808080;
+    background-color: #adadad;
+    border-style: none;
+}
+
+input:focus,
+select,
+textarea,
+button {
+    border-style: none;
+}
+
+form,
+button,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 2px;
+}
+
+.title {
+    font-size: 32px;
+    text-align: center;
+    margin: auto;
+}
+
+hr {
+    border-color: #ff864e;
+}
+
+#schedule {
+    width: 0%;
+    height: 100%;
+    background-color: #ff8800;
+    transition: width 0.5s,background-color 1s;
+    overflow: hidden;
+    text-align: center;
+}
