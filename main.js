@@ -3,6 +3,8 @@ const pen = drawingArea.getContext("2d");
 const fileInput = document.getElementById('file-input');
 const scanResult = document.getElementById('scanResult');
 const schedule = document.getElementById('schedule');
+const startingHeight = document.getElementById('startingHeight');
+const enableShadows = document.getElementById('enableShadows');
 var data = [];
 var enlarge = 1;
 var drawing = false;
@@ -20,7 +22,7 @@ function dealWith(value, length = 2) {
 class RGBColour {
     /**
      * 定义一个RGB值
-     * @param hex {string | number[]} - 16进制颜色或者一个数组`[r,g,b]`
+     * @param hex {string | number[]} - 16进制颜色或者一个数组`[r, g, b]`
      */
     constructor(hex = "#000000") {
         if (typeof hex == "string") {
@@ -95,6 +97,7 @@ function shadow(colour, drop = 0) {
  * @returns {string} 16进制颜色
  */
 function colour(voxel1) {
+    if (!voxel1) return '';
     if ((typeof voxel1) != 'object' && voxel1.voxel == undefined) {
         voxel = voxel1.toString();
     } else {
@@ -139,27 +142,33 @@ async function draw(data) {
             for (let y in data[x]) { // y相当于地图中的z
                 if (((typeof (data[x][y]) != 'object') ? colour(data[x][y]) : colour(data[x][y].voxel)) != '#FF8A65') {
                     try {
-                        if (x > 0 && y > 0 && false) {
-                            if (typeof data[x][y] != undefined && typeof data[x + 1][y].voxel != undefined) {
-                                pen.fillStyle = shadow(colour(data[x][y].voxel), data[x + 1][y].high - data[x][y].high);
-                                pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
-                                console.log(typeof data[x][y] != undefined, x >= 0, y >= 0, typeof data[x + 1][y] != undefined);
-                                console.groupEnd();
-                            } else {
-                                pen.fillStyle = colour(data[x][y]);
-                                pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
-                                console.log((typeof data[x][y]) != undefined, x >= 0, y >= 0, (typeof data[x - 1][y]) != undefined);
-                                console.groupEnd();
-                            }
-                        } else {
-                            var color = colour(data[x][y]);
-                            pen.fillStyle = color;
-                            if (color == '') {
-                                pen.clearRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
-                            }
-                            pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
+                        var color = colour(data[x][y]);
+                        pen.fillStyle = color;
+                        if (color == '') {
+                            pen.clearRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
                         }
+                        pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
+                        var degree = 0;
+                        if (x > 0 && y > 0) {
+                            if (data[x - 1][y].high > data[x][y].high) degree += 0.2;
+                            if (data[x][y - 1].high > data[x][y].high) degree += 0.2;
+                        }
+                        if (x < (data.length - 1) && y < (data[x].length - 1)) {
+                            if (data[x + 1][y].high > data[x][y].high) degree += 0.2;
+                            if (data[x][y + 1].high > data[x][y].high) degree += 0.2;
+                        }
+                        //console.log(data[x - 1][y].high, data[x][y].high, data[x][y - 1].high > data[x][y].high, data[x + 1][y].high, data[x][y].high)
+                        /*if (degree > 0) {
+                            pen.globalCompositeOperation = 'darken';
+                            pen.globalAlpha = Math.min(degree, 0.75);
+                            pen.fillStyle = `#000000`;
+                            console.log(pen.fillStyle, pen.globalAlpha, x, y);
+                            pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
+                            pen.globalCompositeOperation = 'source-over';
+                            pen.globalAlpha = 1;
+                        }*/
                     } catch (error) {
+                        if(x == 128 && y == 128)console.warn(x,y,error);
                         if (typeof data[x][y] != undefined) pen.fillStyle = colour(data[x][y].voxel);
                         else pen.fillStyle = colour(data[x][y]);
                         pen.fillRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
@@ -167,9 +176,13 @@ async function draw(data) {
                     completed++;
                     schedule.style.width = `${Math.round(completed / total * 10000) / 100}%`;
                     schedule.innerText = `${Math.round(completed / total * 100)}%`;
-                    if (completed % 16 == 0) await sleep(1);
+                    if (completed % 128 == 0) await sleep(1);
                 } else {
                     pen.clearRect(x * enlarge * 2, y * enlarge * 2, x * enlarge * 2, y * enlarge * 2);
+                    completed++;
+                    schedule.style.width = `${Math.round(completed / total * 10000) / 100}%`;
+                    schedule.innerText = `${Math.round(completed / total * 100)}%`;
+                    if (completed % 128 == 0) await sleep(1);
                 }
             }
         }
@@ -217,7 +230,7 @@ document.getElementById('enlarge').addEventListener('click', () => {
     setSize();
 });
 document.getElementById('copy').addEventListener('click', () => {
-    copy('(async function () {var scanResult = []; for (let x = 0; x <= voxels.shape.x; x++) {scanResult.push([]);for (let z = 0; z <= voxels.shape.z; z++) {for (let y = voxels.shape.y; y >= 0; y--) {if(y <= 0) scanResult[scanResult.length - 1].push(voxels.name(0)); else if (voxels.getVoxelId(x, y, z) != 0) {scanResult[scanResult.length - 1].push({voxel:voxels.name(voxels.getVoxelId(x, y, z)),high:y});break;}}}await sleep(16);}console.log(JSON.stringify(scanResult));}());');
+    copy(`(async function () {var scanResult = []; for (let x = 0; x <= voxels.shape.x; x++) {scanResult.push([]);for (let z = 0; z <= voxels.shape.z; z++) {for (let y = ${startingHeight.value}; y >= 0; y--) {if(y <= 0) scanResult[scanResult.length - 1].push(voxels.name(0)); else if (voxels.getVoxelId(x, y, z) != 0) {scanResult[scanResult.length - 1].push({voxel:voxels.name(voxels.getVoxelId(x, y, z)),high:y});break;}}}await sleep(16);}console.log(JSON.stringify(scanResult));}());`);
     alert('复制成功！');
 })
 setInterval(() => {
